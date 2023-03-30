@@ -4,5 +4,10 @@
     { "name": "Shiyi" },
     { "name": "Wenjun" },
     { "name": "Zhibin" }
-  ]
+  ],
+  "class": {
+    "name": "Database Applications Design and Tuning",
+    "code": "CS5421",
+    "credit": 4
+  }
 }

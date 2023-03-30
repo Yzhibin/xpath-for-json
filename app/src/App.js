@@ -1,9 +1,10 @@
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Grid, TextField, Typography } from "@mui/material";
 import Editor from "react-simple-code-editor";
 import TeamJSON from "./assets/example/team.json";
 import { highlight, languages } from "prismjs/components/prism-core";
+import { find } from "./lib";
 import "prismjs/components/prism-clike";
 import "prismjs/components/prism-javascript";
 import "prismjs/components/prism-json";
@@ -14,6 +15,18 @@ function App() {
     "// load a JSON or type in your JSON here:\n\n"
   );
   const [result, setResult] = useState("// result will go here: \n\n");
+  const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    let r;
+    try {
+      r = find(code, query);
+      if (r) setResult(JSON.stringify(r, null, 4));
+      else setResult("");
+    } catch (_) {
+      setResult("");
+    }
+  }, [code, query]);
 
   return (
     <div className="App">
@@ -28,6 +41,10 @@ function App() {
               fullWidth
               label="XPath-like Expression"
               variant="filled"
+              value={query}
+              onChange={(event) => {
+                setQuery(event.target.value);
+              }}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -55,8 +72,8 @@ function App() {
             <div style={{ border: "solid 1px #555" }}>
               <Editor
                 value={code}
-                onValueChange={(code) => setCode(code)}
-                highlight={(code) => highlight(code, languages.js)}
+                onValueChange={(c) => setCode(c)}
+                highlight={(c) => highlight(c, languages.js)}
                 padding={10}
                 style={{
                   fontFamily: '"Fira code", "Fira Mono", monospace',
@@ -74,8 +91,8 @@ function App() {
             <div style={{ border: "solid 1px #555" }}>
               <Editor
                 value={result}
-                onValueChange={(result) => setResult(result)}
-                highlight={(result) => highlight(result, languages.js)}
+                onValueChange={(c) => setResult(c)}
+                highlight={(c) => highlight(c, languages.js)}
                 padding={10}
                 style={{
                   fontFamily: '"Fira code", "Fira Mono", monospace',
